@@ -36,8 +36,5 @@ setup(
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
     install_requires=get_requirements(),
-    python_requires=">=3.6",
-    dependency_links=[
-        "https://download.pytorch.org/whl/cu113"
-    ]
+    python_requires=">=3.6"
 )
