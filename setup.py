@@ -37,4 +37,7 @@ setup(
     ],
     install_requires=get_requirements(),
     python_requires=">=3.6",
+    dependency_links=[
+        "https://download.pytorch.org/whl/cu113"
+    ]
 )
