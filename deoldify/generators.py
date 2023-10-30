@@ -55,7 +55,7 @@ def unet_learner_wide(
 ) -> Learner:
     "Build Unet learner from `data` and `arch`."
     meta = cnn_config(arch)
-    body = create_body(arch, pretrained)
+    body = create_body(arch, pretrained=False)
     model = to_device(
         DynamicUnetWide(
             body,
