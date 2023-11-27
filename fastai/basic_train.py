@@ -264,7 +264,7 @@ class Learner():
     def load(self, file:PathLikeOrBinaryStream=None, device:torch.device=None, strict:bool=True,
              with_opt:bool=None, purge:bool=True, remove_module:bool=False):
         "Load model and optimizer state (if `with_opt`) `file` from `self.model_dir` using `device`. `file` can be file-like (file or buffer)"
-        if purge: self.purge(clear_opt=ifnone(with_opt, False))
+        if purge: self.purge(clear_opt=ifnone(with_opt, False), device=device)
         if device is None: device = self.data.device
         elif isinstance(device, int): device = torch.device('cuda', device)
         source = self.path/self.model_dir/f'{file}.pth' if is_pathlike(file) else file
@@ -302,7 +302,7 @@ class Learner():
         gc.collect()
         print("this Learner object self-destroyed - it still exists, but no longer usable")
 
-    def purge(self, clear_opt:bool=True):
+    def purge(self, clear_opt:bool=True, device:torch.device=None):
         "Purge the `Learner` of all cached attributes to release some GPU memory."
         self._test_writeable_path()
         attrs_all = [k for k in self.__dict__.keys() if not k.startswith("__")]
@@ -319,7 +319,7 @@ class Learner():
         torch.save(state, open(tmp_file, 'wb'))
         for a in attrs_del: delattr(self, a)
         gc.collect()
-        state = torch.load(tmp_file)
+        state = torch.load(tmp_file, map_location=device)
         os.remove(tmp_file)
 
         for a in attrs_pkl: setattr(self, a, state[a])
