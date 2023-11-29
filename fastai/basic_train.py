@@ -264,9 +264,9 @@ class Learner():
     def load(self, file:PathLikeOrBinaryStream=None, device:torch.device=None, strict:bool=True,
              with_opt:bool=None, purge:bool=True, remove_module:bool=False):
         "Load model and optimizer state (if `with_opt`) `file` from `self.model_dir` using `device`. `file` can be file-like (file or buffer)"
-        if purge: self.purge(clear_opt=ifnone(with_opt, False), device=device)
         if device is None: device = self.data.device
         elif isinstance(device, int): device = torch.device('cuda', device)
+        if purge: self.purge(clear_opt=ifnone(with_opt, False), device=device)
         source = self.path/self.model_dir/f'{file}.pth' if is_pathlike(file) else file
         state = torch.load(source, map_location=device)
         if set(state.keys()) == {'model', 'opt'}:
